@@ -1,4 +1,13 @@
-drop table if exists ${hiveconf:table};
-create table ${hiveconf:table}(line string) partitioned by (type string) location "${hiveconf:path}";
---alter table ${hiveconf:table} add partition (type = 'hadoop') location "${hiveconf:path}/hadoop";
-LOAD DATA LOCAL INPATH '/etc/hadoop/conf' OVERWRITE INTO TABLE ${hiveconf:table} PARTITION (type="hadoop");
+DROP TABLE IF EXISTS ${hiveconf:table};
+
+CREATE TABLE ${hiveconf:table}(line string) 
+	PARTITIONED BY (type string)
+	LOCATION "${hiveconf:hdfspath}";
+
+LOAD DATA LOCAL INPATH 'data/pg5200.txt'
+	OVERWRITE INTO TABLE ${hiveconf:table} 
+	PARTITION (type="5200");
+
+LOAD DATA LOCAL INPATH 'data/pg46.txt'
+	OVERWRITE INTO TABLE ${hiveconf:table} 
+	PARTITION (type="46");
